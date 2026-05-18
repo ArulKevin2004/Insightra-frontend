@@ -1,42 +1,101 @@
 import React from 'react';
+import KPIcard from '../components/dashboard/KPIcard';
+import PredictionChart from '../components/dashboard/PredictionChart';
+import StatusWidget from '../components/dashboard/StatusWidget';
+import ModelCard from '../components/dashboard/ModelCard';
 
 const Dashboard: React.FC = () => {
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Metric Cards */}
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Current Model</p>
-          <p className="text-2xl font-bold mt-1">XGBoost v2.1</p>
-          <div className="mt-2 text-xs text-green-600 flex items-center">
-            <span>Accuracy: 94.2%</span>
-          </div>
-        </div>
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Prediction Dashboard</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Monitor model performance and traffic forecasts.</p>
+      </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Drift Status</p>
-          <p className="text-2xl font-bold mt-1 text-green-600">Stable</p>
-          <div className="mt-2 text-xs text-gray-500 flex items-center">
-            <span>Last checked: 2 hours ago</span>
-          </div>
-        </div>
+      {/* KPI Cards Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <KPIcard
+          title="Current Prediction"
+          value="1,450"
+          unit="TPS"
+          trend={{ value: '12%', isPositive: true }}
+          status="green"
+        />
+        <KPIcard
+          title="Actual Traffic"
+          value="1,520"
+          unit="TPS"
+          trend={{ value: '8%', isPositive: true }}
+          status="green"
+        />
+        <KPIcard
+          title="Forecast Accuracy"
+          value="95.4"
+          unit="%"
+          trend={{ value: '0.5%', isPositive: true }}
+          status="green"
+        />
+        <KPIcard
+          title="Running Model"
+          value="SARIMA_v1"
+          status="blue"
+        />
+      </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Requests</p>
-          <p className="text-2xl font-bold mt-1">12,450</p>
-          <div className="mt-2 text-xs text-blue-600 flex items-center">
-            <span>+12% from last week</span>
-          </div>
+      {/* Chart Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <PredictionChart />
+        </div>
+        
+        {/* Sidebar Widgets */}
+        <div className="space-y-6">
+          <StatusWidget
+            title="System Status"
+            items={[
+              { label: 'API Gateway', value: 'Operational', status: 'success' },
+              { label: 'Inference Engine', value: 'Operational', status: 'success' },
+              { label: 'Data Pipeline', value: 'Operational', status: 'success' },
+              { label: 'Latency', value: '24ms', status: 'success' },
+            ]}
+          />
+          
+          <StatusWidget
+            title="Prediction Status"
+            items={[
+              { label: 'Last Prediction', value: '10:45:00', status: 'info' },
+              { label: 'Next Run', value: '10:50:00', status: 'info' },
+              { label: 'Drift Status', value: 'Stable', status: 'success' },
+              { label: 'Anomalies Detected', value: '0', status: 'success' },
+            ]}
+          />
         </div>
       </div>
 
-      {/* Chart Placeholder */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm h-96 flex flex-col items-center justify-center text-gray-500">
-        <p className="text-lg font-medium">Concept Drift Over Time</p>
-        <p className="text-sm">Chart placeholder - Integration with Chart.js or Recharts needed</p>
-        <div className="w-full max-w-lg h-40 bg-gray-100 dark:bg-gray-700 mt-4 rounded-lg flex items-center justify-center">
-          <span className="text-xs text-gray-400">Waveform Visualization</span>
-        </div>
+      {/* Bottom Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ModelCard
+          name="SARIMA"
+          version="v1.0.4"
+          status="active"
+          health={98}
+          lastUpdated="2 hours ago"
+        />
+        <ModelCard
+          name="XGBoost"
+          version="v2.1.0"
+          status="training"
+          health={85}
+          lastUpdated="In progress"
+        />
+        <ModelCard
+          name="LSTM"
+          version="v0.9.2"
+          status="inactive"
+          health={0}
+          lastUpdated="3 days ago"
+        />
       </div>
     </div>
   );
